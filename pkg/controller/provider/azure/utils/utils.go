@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/Azure/go-autorest/autorest"
+	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 	"github.com/gardener/external-dns-management/pkg/dns/provider"
 	perrs "github.com/gardener/external-dns-management/pkg/dns/provider/errors"
@@ -60,6 +61,16 @@ func SplitZoneID(zoneid string) (string, string) {
 	return parts[0], parts[1]
 }
 
+func NewUSClientCredentialsConfig(clientID string, clientSecret string, tenantID string) auth.ClientCredentialsConfig {
+	return auth.ClientCredentialsConfig{
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		TenantID:     tenantID,
+		Resource:     azure.USGovernmentCloud.ResourceManagerEndpoint,
+		AADEndpoint:  azure.USGovernmentCloud.ActiveDirectoryEndpoint,
+	}
+}
+
 // GetSubscriptionIDAndAuthorizer extracts credentials from config
 func GetSubscriptionIDAndAuthorizer(c *provider.DNSHandlerConfig) (subscriptionID string, authorizer autorest.Authorizer, err error) {
 	subscriptionID, err = c.GetRequiredProperty("AZURE_SUBSCRIPTION_ID", "subscriptionID")
@@ -81,7 +92,7 @@ func GetSubscriptionIDAndAuthorizer(c *provider.DNSHandlerConfig) (subscriptionI
 		return
 	}
 
-	authorizer, err = auth.NewClientCredentialsConfig(clientID, clientSecret, tenantID).Authorizer()
+	authorizer, err = NewUSClientCredentialsConfig(clientID, clientSecret, tenantID).Authorizer()
 	if err != nil {
 		err = perrs.WrapAsHandlerError(err, "Creating Azure authorizer with client credentials failed")
 		return

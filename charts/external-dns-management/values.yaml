@@ -4,8 +4,8 @@ fullnameOverride: dns-controller-manager
 replicaCount: 1
 
 image:
-  repository: europe-docker.pkg.dev/gardener-project/public/dns-controller-manager
-  tag: v0.18.2-master
+  repository: ghcr.io/harshcommits/dns-controller-manager
+  tag: v0.18.2-azgov
   pullPolicy: IfNotPresent
 
 env: []

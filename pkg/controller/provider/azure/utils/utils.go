@@ -22,7 +22,6 @@ import (
 	"strings"
 
 	"github.com/Azure/go-autorest/autorest"
-	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 	"github.com/gardener/external-dns-management/pkg/dns/provider"
 	perrs "github.com/gardener/external-dns-management/pkg/dns/provider/errors"
@@ -93,8 +92,8 @@ func GetSubscriptionIDAndAuthorizer(c *provider.DNSHandlerConfig) (subscriptionI
 	}
 
 	config := auth.NewClientCredentialsConfig(clientID, clientSecret, tenantID)
-	config.Resource = azure.USGovernmentCloud.ResourceManagerEndpoint
-	config.AADEndpoint = azure.USGovernmentCloud.ActiveDirectoryEndpoint
+	// config.Resource = azure.USGovernmentCloud.ResourceManagerEndpoint
+	// config.AADEndpoint = azure.USGovernmentCloud.ActiveDirectoryEndpoint
 
 	authorizer, err = config.Authorizer()
 	if err != nil {

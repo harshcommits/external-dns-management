@@ -91,6 +91,7 @@ func GetSubscriptionIDAndAuthorizer(c *provider.DNSHandlerConfig) (subscriptionI
 		return
 	}
 
+	// variables are commented out to check if things are working as expected in defaults
 	config := auth.NewClientCredentialsConfig(clientID, clientSecret, tenantID)
 	// config.Resource = azure.USGovernmentCloud.ResourceManagerEndpoint
 	// config.AADEndpoint = azure.USGovernmentCloud.ActiveDirectoryEndpoint

@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/Azure/go-autorest/autorest"
+	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 	"github.com/gardener/external-dns-management/pkg/dns/provider"
 	perrs "github.com/gardener/external-dns-management/pkg/dns/provider/errors"
@@ -72,10 +73,10 @@ func SplitZoneID(zoneid string) (string, string) {
 
 // GetSubscriptionIDAndAuthorizer extracts credentials from config
 func GetSubscriptionIDAndAuthorizer(c *provider.DNSHandlerConfig) (subscriptionID string, authorizer autorest.Authorizer, err error) {
-	subscriptionID, err = c.GetRequiredProperty("AZURE_SUBSCRIPTION_ID", "subscriptionID")
-	if err != nil {
-		return
-	}
+	// subscriptionID, err = c.GetRequiredProperty("AZURE_SUBSCRIPTION_ID", "subscriptionID")
+	// if err != nil {
+	// 	return
+	// }
 
 	// see https://docs.microsoft.com/en-us/go/azure/azure-sdk-go-authorization
 	clientID, err := c.GetRequiredProperty("AZURE_CLIENT_ID", "clientID")
@@ -93,8 +94,8 @@ func GetSubscriptionIDAndAuthorizer(c *provider.DNSHandlerConfig) (subscriptionI
 
 	// variables are commented out to check if things are working as expected in defaults
 	config := auth.NewClientCredentialsConfig(clientID, clientSecret, tenantID)
-	// config.Resource = azure.USGovernmentCloud.ResourceManagerEndpoint
-	// config.AADEndpoint = azure.USGovernmentCloud.ActiveDirectoryEndpoint
+	config.Resource = azure.USGovernmentCloud.ResourceManagerEndpoint
+	config.AADEndpoint = azure.USGovernmentCloud.ActiveDirectoryEndpoint
 
 	authorizer, err = config.Authorizer()
 	if err != nil {

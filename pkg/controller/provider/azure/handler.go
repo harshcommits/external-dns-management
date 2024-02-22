@@ -22,7 +22,10 @@ import (
 	"strconv"
 	"strings"
 
-	azure "github.com/Azure/azure-sdk-for-go/services/dns/mgmt/2018-05-01/dns"
+	// "github.com/gardener/gardener/pkg/logger"
+	// runtimelog "sigs.k8s.io/controller-runtime/pkg/log"
+
+	azure "github.com/Azure/azure-sdk-for-go/services/privatedns/mgmt/2018-05-01/dns"
 	"github.com/gardener/controller-manager-library/pkg/logger"
 	"github.com/gardener/external-dns-management/pkg/controller/provider/azure/utils"
 
@@ -30,6 +33,11 @@ import (
 	"github.com/gardener/external-dns-management/pkg/dns/provider"
 	perrs "github.com/gardener/external-dns-management/pkg/dns/provider/errors"
 )
+
+// variable for logging errors
+// var (
+// 	errLog error
+// )
 
 type Handler struct {
 	provider.DefaultDNSHandler
@@ -55,8 +63,14 @@ func NewHandler(c *provider.DNSHandlerConfig) (provider.DNSHandler, error) {
 		return nil, err
 	}
 
-	zonesClient := azure.NewZonesClient(subscriptionID)
+	// subscriptionID = "653cf14b-6eef-4224-8533-8b4ee831cce6"
+
+	zonesClient := azure.NewPrivateZonesClient(subscriptionID)
 	recordsClient := azure.NewRecordSetsClient(subscriptionID)
+
+	// string for getting error values
+	// runtimelog.SetLogger(logger.ZapLogger(false))
+	// runtimelog.Log.Error(errLog, "zones client "+zonesClient+" "+"records client "+recordsClient)
 
 	zonesClient.Authorizer = authorizer
 	recordsClient.Authorizer = authorizer
